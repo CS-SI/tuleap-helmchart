@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ template "tuleap.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ template "tuleap.fullname" . }}']
   restartPolicy: Never
