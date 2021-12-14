@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: "{{ template "tuleap.fullname" . }}-test-connection"
   labels:
-    {{- template "tuleap.labels" . | nindent 4 }}
+    {{- include "tuleap.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test
 spec:

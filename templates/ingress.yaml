@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-{{- $serviceName := template "tuleap.fullname" . -}}
+{{- $serviceName := include "tuleap.fullname" . -}}
 {{- $servicePort := .Values.service.externalPort -}}
 {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
 apiVersion: networking.k8s.io/v1

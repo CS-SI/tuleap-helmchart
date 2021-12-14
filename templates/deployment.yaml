@@ -7,7 +7,7 @@ kind: Deployment
 metadata:
   name: {{ template "tuleap.fullname" . }}
   labels:
-    {{- template "tuleap.labels" . | nindent 4 }}
+    {{- include "tuleap.labels" . | nindent 4 }}
     app: {{ template "tuleap.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
@@ -24,7 +24,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- template "tuleap.selectorLabels" . | nindent 6 }}
+      {{- include "tuleap.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -32,7 +32,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- template "tuleap.selectorLabels" . | nindent 8 }}
+        {{- include "tuleap.selectorLabels" . | nindent 8 }}
     spec:
       {{- if .Values.image.pullSecret }}
       imagePullSecrets:

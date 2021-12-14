@@ -8,7 +8,7 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    {{- template "tuleap.labels" . | nindent 4 }}
+    {{- include "tuleap.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -22,4 +22,4 @@ spec:
       port: 22
       protocol: TCP
   selector:
-    {{- template "tuleap.selectorLabels" . | nindent 4 }}
+    {{- include "tuleap.selectorLabels" . | nindent 4 }}

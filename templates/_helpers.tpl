@@ -14,7 +14,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- printf "%s-%s" .Release.Name (template "tuleap.name" .) | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name (include "tuleap.name" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 
@@ -69,7 +69,7 @@ Create the name of the service account to use
 */}}
 {{- define "tuleap.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (template "tuleap.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "tuleap.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
