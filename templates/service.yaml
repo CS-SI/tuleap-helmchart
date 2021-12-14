@@ -1,15 +1,25 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "tuleap.fullname" . }}
+  name: {{ template "tuleap.fullname" . }}
   labels:
-    {{- include "tuleap.labels" . | nindent 4 }}
+    app: {{ template "tuleap.name" . }}
+    part: server
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    {{- template "tuleap.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - name: http
+      port: 80
       protocol: TCP
-      name: http
+    - name: https
+      port: 443
+      protocol: TCP
+    - name: ssh
+      port: 22
+      protocol: TCP
   selector:
-    {{- include "tuleap.selectorLabels" . | nindent 4 }}
+    {{- template "tuleap.selectorLabels" . | nindent 4 }}

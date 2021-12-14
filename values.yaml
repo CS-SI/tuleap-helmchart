@@ -2,17 +2,25 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+deploymentType: "Deployment"
+
+# If the deployment Type is set to Deployment tuleap is deployed as a replica set
+# There should not be more than 1 tuleap instance connected to the same database
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: tuleap/tuleap-community-edition 
+  tag: latest
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  # If using a private repository, the name of the imagePullSecret to use
+  # pullSecret: my-repo-secret
 
-imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+# Set security context for tuleap pod
+securityContext:
+  fsGroup: 1000
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -23,22 +31,16 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-podAnnotations: {}
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
 service:
   type: ClusterIP
-  port: 80
+  externalPort: 9000
+  labels:
+  annotations: {}
+  # May be used in example for internal load balancing in GCP:
+  # cloud.google.com/load-balancer-type: Internal
+  # loadBalancerSourceRanges:
+  #   - 0.0.0.0/0
+  # loadBalancerIP: 1.2.3.4
 
 ingress:
   enabled: false
@@ -56,17 +58,79 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+mysql:
+  enabled: true
+
+redis:
+  enabled: true
+
+livenessProbe:
+  # Raw container includes a setup step.
+  initialDelaySeconds: 360
+  periodSeconds: 30
+  failureThreshold: 6
+
+## Array of extra containers to run alongside the tuleap container
+##
+## Example:
+## - name: myapp-container
+##   image: busybox
+##   command: ['sh', '-c', 'echo Hello && sleep 3600']
+##
+extraContainers: []
+
+## Environment variables to attach to the pods
+##
+# env:
+#   - name: VARIABLE
+#     value: my-value
+
+# Set annotations for pods
+annotations: {}
+
+podAnnotations: {}
+
+## We usually don't make specific ressource recommandations, as they are heavily dependend on
+## The usage of Tuleap and the surrounding infrastructure.
+## Adjust these values to your needs, but make sure that the memory limit is never under 4 GB
+resources:
+  limits:
+    cpu: 800m
+    memory: 4Gi
+  requests:
+    cpu: 400m
+    memory: 2Gi
+
+persistence:
+  enabled: false
+  ## Set annotations on pvc
+  annotations: {}
+
+  ## Specify an existing volume claim instead of creating a new one.
+  ## When using this option all following options like storageClass, accessMode and size are ignored.
+  # existingClaim:
+
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass:
+  accessMode: ReadWriteOnce
+  size: 5Gi
+  uid: 1000
+
+  ## Specify extra volumes. Refer to ".spec.volumes" specification : https://kubernetes.io/fr/docs/concepts/storage/volumes/
+  volumes: []
+  ## Specify extra mounts. Refer to ".spec.containers.volumeMounts" specification : https://kubernetes.io/fr/docs/concepts/storage/volumes/
+  mounts: []
+
+# In case you want to specify different resources for emptyDir than {}
+emptyDir: {}
+  # Example of resouces that might be used:
+  # medium: Memory
+  # sizeLimit: 16Mi
 
 autoscaling:
   enabled: false
@@ -80,3 +144,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+tests:
+  enabled: true

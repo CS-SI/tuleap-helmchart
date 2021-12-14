@@ -1,16 +1,30 @@
+{{- if eq .Values.deploymentType "Deployment"}}
+#
+# https://docs.tuleap.org/installation-guide/docker-image.html#tuleap-community-edition
+#
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tuleap.fullname" . }}
+  name: {{ template "tuleap.fullname" . }}
   labels:
-    {{- include "tuleap.labels" . | nindent 4 }}
+    {{- template "tuleap.labels" . | nindent 4 }}
+    app: {{ template "tuleap.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "tuleap.name" . }}-{{ template "tuleap.fullname" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: tuleap
+    app.kubernetes.io/component: {{ template "tuleap.fullname" . }}
+    app.kubernetes.io/version: {{ .Values.image.tag | quote }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "tuleap.selectorLabels" . | nindent 6 }}
+      {{- template "tuleap.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,29 +32,64 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "tuleap.selectorLabels" . | nindent 8 }}
+        {{- template "tuleap.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- if .Values.image.pullSecret }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+        - name: {{ .Values.image.pullSecret }}
       {{- end }}
-      serviceAccountName: {{ include "tuleap.serviceAccountName" . }}
+      serviceAccountName: {{ template "tuleap.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
+      {{- if .Values.extraContainers }}
+        {{- toYaml .Values.extraContainers | nindent 8 }}
+      {{- end }}
         - name: {{ .Chart.Name }}
+          {{- if .Values.containerSecurityContext }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+{{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: DB_HOST
+              value: "{{ template "mysql.hostname" .}}"
+            - name: DB_ADMIN_USER
+              value: root
+            - name: DB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mysql.secretName" .Subcharts.mysql }}
+                  key: mysql-root-password
+            {{- with .Values.env }}
+            {{- . | toYaml | trim | nindent 12 }}
+            {{- end }}
           ports:
+            # Hardcoded values in the Docker
             - name: http
               containerPort: 80
               protocol: TCP
+            - name: https
+              containerPort: 443
+              protocol: TCP
+            - name: ssh
+              containerPort: 22
+              protocol: TCP
+          volumeMounts:
+{{- if .Values.persistence.mounts }}
+{{ toYaml .Values.persistence.mounts | indent 12 }}
+{{- end }}
+            - mountPath: "/data"
+              name: tuleap-data
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+            exec:
+              command:
+              - /usr/bin/tuleap
+              - healthcheck
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
               path: /
@@ -59,3 +108,15 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+{{- if .Values.persistence.volumes }}
+{{ tpl (toYaml .Values.persistence.volumes | indent 6) . }}
+{{- end }}
+        - name: tuleap-data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{- else }}{{ template "tuleap.fullname" . }}{{- end }}
+          {{- else }}
+          emptyDir: {{- toYaml .Values.emptyDir | nindent 12 }}
+          {{- end  }}
+{{- end }}

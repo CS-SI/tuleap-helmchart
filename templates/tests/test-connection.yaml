@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "tuleap.fullname" . }}-test-connection"
+  name: "{{ template "tuleap.fullname" . }}-test-connection"
   labels:
-    {{- include "tuleap.labels" . | nindent 4 }}
+    {{- template "tuleap.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test
 spec:
@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "tuleap.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ template "tuleap.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never

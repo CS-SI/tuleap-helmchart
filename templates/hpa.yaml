@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "tuleap.fullname" . }}
+  name: {{ template "tuleap.fullname" . }}
   labels:
-    {{- include "tuleap.labels" . | nindent 4 }}
+    {{- template "tuleap.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "tuleap.fullname" . }}
+    name: {{ template "tuleap.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
