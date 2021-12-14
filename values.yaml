@@ -8,6 +8,9 @@ deploymentType: "Deployment"
 # There should not be more than 1 tuleap instance connected to the same database
 replicaCount: 1
 
+ # This will use the default deployment strategy unless it is overriden
+deploymentStrategy: {}
+
 image:
   repository: tuleap/tuleap-community-edition 
   tag: latest

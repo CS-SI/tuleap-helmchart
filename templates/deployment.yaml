@@ -25,6 +25,10 @@ spec:
   selector:
     matchLabels:
       {{- include "tuleap.selectorLabels" . | nindent 6 }}
+{{- if .Values.deploymentStrategy }}
+  strategy:
+{{ toYaml .Values.deploymentStrategy | indent 4 }}
+{{- end }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
