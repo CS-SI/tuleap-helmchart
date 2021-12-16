@@ -1,6 +1,5 @@
 {{- if .Values.ingress.enabled -}}
 {{- $serviceName := include "tuleap.fullname" . -}}
-{{- $servicePort := .Values.service.externalPort -}}
 {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
 apiVersion: networking.k8s.io/v1
 {{ else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
@@ -39,7 +38,7 @@ spec:
           service:
             name: {{ default $serviceName .serviceName }}
             port:
-              number: {{ default $servicePort .servicePort }}
+              name: http
         path: {{ .path}}
         pathType: {{ default "ImplementationSpecific" .pathType }}
   {{- end }}
@@ -50,7 +49,7 @@ spec:
   {{- if and (eq $key "kubernetes.io/ingress.class") (contains $value "gce") }}
   backend:
     serviceName: {{ default $serviceName .serviceName }}
-    servicePort: {{ default $servicePort .servicePort }}
+    servicePort: 80
   {{- end }}
   {{- end }}
   {{- end }}
@@ -62,7 +61,7 @@ spec:
           - path: {{ .path}}
             backend:
               serviceName: {{ default $serviceName .serviceName }}
-              servicePort: {{ default $servicePort .servicePort }}
+              servicePort: 80
     {{- end -}}
 {{ end -}}
   {{- if .Values.ingress.tls }}
