@@ -69,6 +69,8 @@ spec:
             {{- with .Values.env }}
             {{- . | toYaml | trim | nindent 12 }}
             {{- end }}
+            - name: TULEAP_FQDN
+              value: "{{ .Values.fqdn }}"
           ports:
             # Hardcoded values in the Docker
             - name: http
