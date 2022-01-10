@@ -7,3 +7,7 @@ dependencies:
   version: 6.2.6
   repository: https://charts.bitnami.com/bitnami
   condition: redis.enabled
+- name: mailhog
+  version: 5.0.2
+  repository: https://codecentric.github.io/helm-charts
+  condition: mailhog.enabled

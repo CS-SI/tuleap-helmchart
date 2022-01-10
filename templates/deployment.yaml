@@ -71,6 +71,13 @@ spec:
             {{- end }}
             - name: TULEAP_FQDN
               value: "{{ .Values.fqdn }}"
+            {{- if .Values.smtpHost }}
+            - name: TULEAP_EMAIL_RELAYHOST
+              value: "{{ .Values.smtpHost }}:{{ default 25 .Values.smtpHost }}"
+            {{- else if .Values.mailhog.enabled }}
+            - name: TULEAP_EMAIL_RELAYHOST
+              value: "{{ template "mailhog.fullname" . }}:{{ default 25 .Values.mailhog.service.port.smtp }}"
+            {{- end }}
           ports:
             # Hardcoded values in the Docker
             - name: http

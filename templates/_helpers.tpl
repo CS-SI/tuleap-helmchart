@@ -22,6 +22,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
   Create a default fully qualified mysql name.
   We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
+{{- define "mailhog.fullname" -}}
+{{- printf "%s-%s" .Release.Name "mailhog" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+  Create a default fully qualified mysql name.
+  We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
 {{- define "mysql.fullname" -}}
 {{- printf "%s-%s" .Release.Name "mysql" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
