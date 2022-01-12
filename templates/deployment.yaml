@@ -73,7 +73,7 @@ spec:
               value: "{{ .Values.fqdn }}"
             {{- if .Values.smtpHost }}
             - name: TULEAP_EMAIL_RELAYHOST
-              value: "{{ .Values.smtpHost }}:{{ default 25 .Values.smtpHost }}"
+              value: "{{ .Values.smtpHost }}:{{ default 25 .Values.smtpPort }}"
             {{- else if .Values.mailhog.enabled }}
             - name: TULEAP_EMAIL_RELAYHOST
               value: "{{ template "mailhog.fullname" . }}:{{ default 25 .Values.mailhog.service.port.smtp }}"
