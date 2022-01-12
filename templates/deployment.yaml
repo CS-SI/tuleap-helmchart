@@ -95,6 +95,14 @@ spec:
 {{- end }}
             - mountPath: "/data"
               name: tuleap-data
+          startupProbe:
+            exec:
+              command:
+              - /usr/bin/tuleap
+              - healthcheck
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
           livenessProbe:
             exec:
               command:
@@ -107,6 +115,9 @@ spec:
             httpGet:
               path: /
               port: http
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

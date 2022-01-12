@@ -2,6 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+#deploymentType: "StatefulSet"
 deploymentType: "Deployment"
 
 # If the deployment Type is set to Deployment tuleap is deployed as a replica set
@@ -71,11 +72,24 @@ redis:
 mailhog:
   enabled: true
 
-livenessProbe:
+startupProbe:
   # Raw container includes a setup step.
-  initialDelaySeconds: 360
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  failureThreshold: 24
+
+livenessProbe:
+  initialDelaySeconds: 60
   periodSeconds: 30
   failureThreshold: 6
+
+readinessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  failureThreshold: 6
+
+initContainers:
+  resources: {}
 
 ## Array of extra containers to run alongside the tuleap container
 ##
@@ -109,7 +123,7 @@ resources:
     memory: 2Gi
 
 persistence:
-  enabled: false
+  enabled: true
   ## Set annotations on pvc
   annotations: {}
 
