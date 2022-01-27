@@ -95,6 +95,10 @@ spec:
 {{- end }}
             - mountPath: "/data"
               name: tuleap-data
+            - mountPath: "/usr/share/tuleap/src/etc/nginx/tuleap.conf.dist"
+              subPath: tuleap.conf.dist
+              name: nginx-tuleap-conf
+              readOnly: true
           startupProbe:
             exec:
               command:
@@ -143,4 +147,10 @@ spec:
           {{- else }}
           emptyDir: {{- toYaml .Values.emptyDir | nindent 12 }}
           {{- end  }}
+        - name: nginx-tuleap-conf
+          configMap:
+            name: nginx-tuleap-conf
+            items:
+              - key: tuleap.conf.dist
+                path: tuleap.conf.dist
 {{- end }}
