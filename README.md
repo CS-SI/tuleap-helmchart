@@ -106,6 +106,14 @@ The following table lists the configurable parameters of the Tuleap chart and th
 | `startupProbe.periodSeconds` | StartupProbe period between checking SonarQube | `30` |
 | `startupProbe.failureThreshold` | StartupProbe threshold for marking as failed | `24` |
 
+### InitContainers
+
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
+| `initContainers.image` | Change init container image | `busybox:1.32` |
+| `initContainers.securityContext` | SecurityContext for init containers | `None` |
+| `initContainers.resources` | Resources for init containers | `{}` |
+
 
 ### Resources
 

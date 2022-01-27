@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Config file for nginx to allow tls-termination at the Ingress controller level,
   offering a ready-to-use Tuleap deployment.
 
+- An initContainer to wait for database, in order to avoid starting Tuleap without database.
+
 ## [0.1.0] - 2022-01-14
 
 Initial release.

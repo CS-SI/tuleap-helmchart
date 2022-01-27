@@ -45,6 +45,19 @@ spec:
       serviceAccountName: {{ template "tuleap.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      {{- if .Values.mysql.enabled }}      
+        - name: wait-for-database
+          image: {{ default "busybox:1.32" .Values.initContainers.image }}
+          imagePullPolicy: {{ .Values.image.pullPolicy  }}
+          {{- if $securityContext := .Values.initContainers.securityContext }}
+          securityContext:
+{{ toYaml $securityContext | indent 12 }}
+          {{- end }}
+          resources:
+{{ toYaml .Values.initContainers.resources | indent 12 }}
+          command: ["/bin/sh", "-c", 'for i in $(seq 1 200); do nc -z -w3 {{ include "mysql.hostname" . }} 3306 && exit 0 || sleep 2; done; exit 1']
+      {{- end }}
       containers:
       {{- if .Values.extraContainers }}
         {{- toYaml .Values.extraContainers | nindent 8 }}
