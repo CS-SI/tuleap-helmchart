@@ -12,12 +12,8 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    app.kubernetes.io/name: {{ template "tuleap.name" . }}-{{ template "tuleap.fullname" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/part-of: tuleap
     app.kubernetes.io/component: {{ template "tuleap.fullname" . }}
-    app.kubernetes.io/version: {{ .Values.image.tag | quote }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}

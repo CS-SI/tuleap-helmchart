@@ -4,6 +4,7 @@ apiVersion: v1
 metadata:
   name: {{ template "tuleap.fullname" . }}
   labels:
+    {{- include "tuleap.labels" . | nindent 4 }}
     app: {{ template "tuleap.name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: "{{ .Release.Name }}"

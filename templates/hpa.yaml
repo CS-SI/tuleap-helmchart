@@ -4,7 +4,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "tuleap.fullname" . }}
   labels:
-    {{- template "tuleap.labels" . | nindent 4 }}
+    {{- include "tuleap.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
