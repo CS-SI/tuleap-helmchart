@@ -82,3 +82,58 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return the secret with Tuleap credentials
+*/}}
+{{- define "tuleap.secretName" -}}
+    {{- if .Values.auth.existingSecret -}}
+        {{- printf "%s" .Values.auth.existingSecret -}}
+    {{- else -}}
+        {{- printf "%s" (include "tuleap.fullname" .) -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Returns the available value for certain key in an existing secret (if it exists),
+otherwise it generates a random value.
+*/}}
+{{- define "getValueFromSecret" }}
+    {{- $len := (default 16 .Length) | int -}}
+    {{- $obj := (lookup "v1" "Secret" .Namespace .Name).data -}}
+    {{- if $obj }}
+        {{- index $obj .Key | b64dec -}}
+    {{- else -}}
+        {{- randAlphaNum $len -}}
+    {{- end -}}
+{{- end }}
+
+{{/*
+Return true if a secret object should be created for Tuleap
+*/}}
+{{- define "tuleap.createSecret" -}}
+{{- if not .Values.auth.existingSecret }}
+    {{- true -}}
+{{- end -}}
+{{- end -}}
+
+
+{{- define "tuleap.sys.db.password" -}}
+    {{- if not (empty .Values.auth.sysdbPassword) }}
+        {{- .Values.auth.sysdbPassword }}
+    {{- else if (not .Values.auth.forcePassword) }}
+        {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "tuleap.fullname" .) "Length" 20 "Key" "tuleap-sys-db-password" ) }}
+    {{- else }}
+        {{- required "A Tuleap Sysdb Password is required!" .Values.auth.sysdbPassword}}
+    {{- end }}
+{{- end -}}
+
+{{- define "tuleap.site.admin.password" -}}
+    {{- if not (empty .Values.auth.adminPassword) }}
+        {{- .Values.auth.adminPassword }}
+    {{- else if (not .Values.auth.forcePassword) }}
+        {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "tuleap.fullname" .) "Length" 20 "Key" "tuleap-site-admin-password" ) }}
+    {{- else }}
+        {{- required "A Tuleap Site Admin Password is required!" .Values.auth.adminPassword }}
+    {{- end }}
+{{- end -}}

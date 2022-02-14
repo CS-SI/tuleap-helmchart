@@ -19,6 +19,17 @@ image:
   # If using a private repository, the name of the imagePullSecret to use
   # pullSecret: my-repo-secret
 
+auth:
+  # Password used by Tuleap application to connect to the database (default user tuleapadm). Ignored if existing secret is provided.
+  # Cf. https://docs.tuleap.org/installation-guide/docker-image.html
+  sysdbPassword: ""
+  # Password of the Tuleap site administrator application user. Ignored if existing secret is provided.
+  # Cf. https://docs.tuleap.org/installation-guide/docker-image.html
+  adminPassword: ""
+  # Use existing secret for password details. The secret has to contain the keys `tuleap-sys-db-password` and `tuleap-site-admin-password`
+  # NOTE: When it's set the auth.sysdbPassword and auth.adminPassword are ignored.
+  existingSecret: ""
+
 nameOverride: ""
 fullnameOverride: ""
 
