@@ -13,7 +13,7 @@ replicaCount: 1
 deploymentStrategy: {}
 
 image:
-  repository: tuleap/tuleap-community-edition 
+  repository: tuleap/tuleap-community-edition
   tag: latest
   pullPolicy: IfNotPresent
   # If using a private repository, the name of the imagePullSecret to use

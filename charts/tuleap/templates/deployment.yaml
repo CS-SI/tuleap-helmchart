@@ -42,7 +42,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-      {{- if .Values.mysql.enabled }}      
+      {{- if .Values.mysql.enabled }}
         - name: wait-for-database
           image: {{ default "busybox:1.32" .Values.initContainers.image }}
           imagePullPolicy: {{ .Values.image.pullPolicy  }}
