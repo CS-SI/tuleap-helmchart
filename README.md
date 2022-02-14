@@ -62,6 +62,14 @@ The following table lists the configurable parameters of the Tuleap chart and th
 | `image.pullPolicy` | Image pull policy  | `IfNotPresent` |
 | `image.pullSecret` | imagePullSecret to use for private repository | `None` |
 
+### Passwords
+
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
+| `auth.sysdbPassword` | Password used by Tuleap application to connect to the database (default user tuleapadm). Ignored if existing secret is provided. | "" |
+  `auth.adminPassword` | Password of the Tuleap site administrator application user. Ignored if existing secret is provided. | "" |
+| `auth.existingSecret` | Use existing secret for password details. The secret has to contain the keys `tuleap-sys-db-password` and `tuleap-site-admin-password` | "" |
+
 ### Security
 
 | Parameter | Description | Default |

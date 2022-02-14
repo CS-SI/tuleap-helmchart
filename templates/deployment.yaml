@@ -66,6 +66,20 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            # Mandatory environment variables
+            # See https://docs.tuleap.org/installation-guide/docker-image.html
+            - name: TULEAP_SYS_DBHOST
+              value: "{{ template "mysql.hostname" .}}"
+            - name: TULEAP_SYS_DBPASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "tuleap.secretName" . }}
+                  key: tuleap-sys-db-password
+            - name: SITE_ADMINISTRATOR_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "tuleap.secretName" . }}
+                  key: tuleap-site-admin-password
             - name: DB_HOST
               value: "{{ template "mysql.hostname" .}}"
             - name: DB_ADMIN_USER

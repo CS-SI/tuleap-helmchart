@@ -20,3 +20,8 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
+
+Execute the following to get the administrator credentials:
+
+  echo Username: admin
+  TULEAP_SITE_ADMIN_PASSWORD=$(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "tuleap.secretName" . }} -o jsonpath="{.data.tuleap-site-admin-password}" | base64 --decode)
