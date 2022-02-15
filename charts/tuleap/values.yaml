@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-#deploymentType: "StatefulSet"
+# TODO deploymentType: "StatefulSet"
 deploymentType: "Deployment"
 
 # If the deployment Type is set to Deployment tuleap is deployed as a replica set
@@ -13,7 +13,7 @@ replicaCount: 1
 deploymentStrategy: {}
 
 image:
-  repository: tuleap/tuleap-community-edition 
+  repository: tuleap/tuleap-community-edition
   tag: latest
   pullPolicy: IfNotPresent
   # If using a private repository, the name of the imagePullSecret to use
