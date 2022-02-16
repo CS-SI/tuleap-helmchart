@@ -39,4 +39,6 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
 
       - name: Run chart-testing (install)
-        run: ct install
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          ct install
