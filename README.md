@@ -5,6 +5,26 @@
 This is the Git repo of the CS GROUP - France Helm Chart for [Tuleap](https://tuleap.org).  
 The actual chart can be found in the [charts](charts/tuleap) directory and see the README of the chart for more information. 
 
+## Usage
+
+[Helm](https://helm.sh) must be installed to use the charts.
+Please refer to Helm's [documentation](https://helm.sh/docs) to get started.
+
+Once Helm has been set up correctly, add the repo as follows:
+
+  helm repo add tuleap https://CS-SI.github.io/tuleap-helmchart
+
+If you had already added this repo earlier, run `helm repo update` to retrieve the latest versions of the packages.
+You can then run `helm search repo tuleap` to see the charts.
+
+To install the Tuleap chart:
+
+    helm install my-tuleap tuleap/tuleap
+
+To uninstall the chart:
+
+    helm delete my-tuleap
+
 # License
 
 Copyright 2022, CS GROUP - France, https://www.csgroup.eu/
