@@ -76,6 +76,11 @@ ingress:
 
 mysql:
   enabled: true
+  architecture: standalone
+  image:
+    tag: 5.7
+  primary:
+    extraFlags: "--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --sql-mode=NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
 
 redis:
   enabled: true
