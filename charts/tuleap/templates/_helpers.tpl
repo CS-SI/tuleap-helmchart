@@ -35,6 +35,18 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
+Return the secret with MySQL credentials
+Redefined expecting Helm 3.7 to be able to make call like template "mysql.secretName" .Subcharts.mysql
+*/}}
+{{- define "tuleap.mysql.secretName" -}}
+    {{- if and .Values.mysql.auth .Values.mysql.auth.existingSecret -}}
+        {{- printf "%s" .Values.mysql.auth.existingSecret -}}
+    {{- else -}}
+        {{- printf "%s" (include "mysql.fullname" .) -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
   Determine the hostname to use for mySQL.
 */}}
 {{- define "mysql.hostname" -}}

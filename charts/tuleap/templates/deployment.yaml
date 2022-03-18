@@ -87,7 +87,7 @@ spec:
             - name: DB_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "mysql.secretName" .Subcharts.mysql }}
+                  name: {{ template "tuleap.mysql.secretName" .}}
                   key: mysql-root-password
             {{- with .Values.env }}
             {{- . | toYaml | trim | nindent 12 }}
