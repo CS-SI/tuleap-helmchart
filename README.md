@@ -7,7 +7,7 @@ The actual chart can be found in the [charts](charts/tuleap) directory and see t
 
 ## Usage
 
-[Helm](https://helm.sh) (>=3.7) must be installed to use the charts.
+[Helm](https://helm.sh) must be installed to use the charts.
 Please refer to Helm's [documentation](https://helm.sh/docs) to get started.
 
 Once Helm has been set up correctly, add the repo as follows:
