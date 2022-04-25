@@ -152,6 +152,7 @@ The following table lists the configurable parameters of the Tuleap chart and th
 | --------- | ----------- | ------- |
 | `smtpHost` | SMTP server host	| "" |
 | `smtpPort` | SMTP server port | "" |
+
 ### Bundled Mysql Chart
 
 | Parameter | Description | Default |
@@ -161,6 +162,14 @@ The following table lists the configurable parameters of the Tuleap chart and th
 | `mysql.mysqlServer` | Hostname of the external Mysql server | `null` |
 | `mysql.auth.rootPassword` | Mysql root password | `""` |
 | `mysql.architecture` | MySQL architecture (`standalone` or `replication`) | `standalone` |
+
+### Bundled Redis Chart
+
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
+| `redis.enabled` | Set to `false` to use external server  | `true` |
+| `redis.server` | Hostname of the external server | `null` |
+| `redis.port` | Port of server | `6379` |
 
 ### Tests
 

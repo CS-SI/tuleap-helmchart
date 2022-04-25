@@ -58,6 +58,17 @@ Redefined expecting Helm 3.7 to be able to make call like template "mysql.secret
 {{- end -}}
 
 {{/*
+  Determine the hostname to use for Redis.
+*/}}
+{{- define "redis.hostname" -}}
+{{- if .Values.redis.enabled -}}
+{{- printf "%s-%s" .Release.Name "redis" | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s" .Values.redis.server -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "tuleap.chart" -}}
