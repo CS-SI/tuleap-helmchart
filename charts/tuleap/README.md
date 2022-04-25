@@ -169,6 +169,7 @@ The following table lists the configurable parameters of the Tuleap chart and th
 | --------- | ----------- | ------- |
 | `redis.enabled` | Set to `false` to use external server  | `true` |
 | `redis.server` | Hostname of the external server | `null` |
+| `redis.port` | Port of server | `6379` |
 
 ### Tests
 

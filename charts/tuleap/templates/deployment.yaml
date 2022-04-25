@@ -92,6 +92,8 @@ spec:
             {{- if or .Values.redis.enabled .Values.redis.server }}
             - name: TULEAP_REDIS_SERVER
               value: "{{ template "redis.hostname" .}}"
+            - name: TULEAP_REDIS_PORT
+              value: "{{ .Values.redis.port }}"
             {{- end }}
             {{- with .Values.env }}
             {{- . | toYaml | trim | nindent 12 }}
