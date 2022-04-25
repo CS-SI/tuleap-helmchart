@@ -79,6 +79,7 @@ mysql:
 
 redis:
   enabled: true
+  # server: external.hostname
 
 mailhog:
   enabled: true

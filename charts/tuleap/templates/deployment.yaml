@@ -89,6 +89,10 @@ spec:
                 secretKeyRef:
                   name: {{ template "tuleap.mysql.secretName" .}}
                   key: mysql-root-password
+            {{- if or .Values.redis.enabled .Values.redis.server }}
+            - name: TULEAP_REDIS_SERVER
+              value: "{{ template "redis.hostname" .}}"
+            {{- end }}
             {{- with .Values.env }}
             {{- . | toYaml | trim | nindent 12 }}
             {{- end }}
