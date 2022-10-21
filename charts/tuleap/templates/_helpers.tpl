@@ -62,7 +62,7 @@ Redefined expecting Helm 3.7 to be able to make call like template "mysql.secret
 */}}
 {{- define "redis.hostname" -}}
 {{- if .Values.redis.enabled -}}
-{{- printf "%s-%s" .Release.Name "redis" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name "redis-master" | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
 {{- printf "%s" .Values.redis.server -}}
 {{- end -}}
