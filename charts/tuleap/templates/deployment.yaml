@@ -90,7 +90,7 @@ spec:
                   name: {{ template "tuleap.mysql.secretName" .}}
                   key: mysql-root-password
             {{- if or .Values.redis.enabled .Values.redis.server }}
-            - name: TULEAP_FPM_MODE
+            - name: TULEAP_FPM_SESSION_MODE
               value: "redis"
             - name: TULEAP_REDIS_SERVER
               value: "{{ template "redis.hostname" .}}"
