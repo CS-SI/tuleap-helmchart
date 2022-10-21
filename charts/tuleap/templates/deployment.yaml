@@ -96,6 +96,11 @@ spec:
               value: "{{ template "redis.hostname" .}}"
             - name: TULEAP_REDIS_PORT
               value: "{{ .Values.redis.port }}"
+            - name: TULEAP_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "redis.secretName" .Subcharts.redis }}
+                  key: {{ template "redis.secretPasswordKey" .Subcharts.mysql }}
             {{- end }}
             {{- with .Values.env }}
             {{- . | toYaml | trim | nindent 12 }}
