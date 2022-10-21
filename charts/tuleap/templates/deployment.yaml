@@ -89,6 +89,19 @@ spec:
                 secretKeyRef:
                   name: {{ template "tuleap.mysql.secretName" .}}
                   key: mysql-root-password
+            {{- if or .Values.redis.enabled .Values.redis.server }}
+            - name: TULEAP_FPM_SESSION_MODE
+              value: "redis"
+            - name: TULEAP_REDIS_SERVER
+              value: "{{ template "redis.hostname" .}}"
+            - name: TULEAP_REDIS_PORT
+              value: "{{ .Values.redis.port }}"
+            - name: TULEAP_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "redis.secretName" .Subcharts.redis }}
+                  key: {{ template "redis.secretPasswordKey" .Subcharts.mysql }}
+            {{- end }}
             {{- with .Values.env }}
             {{- . | toYaml | trim | nindent 12 }}
             {{- end }}
